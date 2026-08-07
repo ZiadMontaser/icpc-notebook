@@ -1,7 +1,6 @@
 \chapter{Combinatorial}
 	\kactlimport{combinatorics.h}
 
-
 \section{Permutations}
 	\subsection{Factorial}
 		\import{factorial.tex}
@@ -23,40 +22,56 @@
 	% 	 If $f(n)$ counts ``configurations'' (of some sort) of length $n$, we can ignore rotational symmetry using $G = \mathbb Z_n$ to get
 	% 	 \[ g(n) = \frac 1 n \sum_{k=0}^{n-1}{f(\text{gcd}(n, k))} = \frac 1 n \sum_{k|n}{f(k)\phi(n/k)}. \]
 
-% \section{Partitions and subsets}
-% 	\subsection{Partition function}
-% 		Number of ways of writing $n$ as a sum of positive integers, disregarding the order of the summands.
-% 		\[ p(0) = 1,\ p(n) = \sum_{k \in \mathbb Z \setminus \{0\}}{(-1)^{k+1} p(n - k(3k-1) / 2)} \]
-% 		\[ p(n) \sim 0.145 / n \cdot \exp(2.56 \sqrt{n}) \]
+\section{Partitions and subsets}
+	\subsection{Partition function}
+		Number of ways of writing $n$ as a sum of positive integers, disregarding the order of the summands.
+		\[ p(0) = 1,\ p(n) = \sum_{k \in \mathbb Z \setminus \{0\}}{(-1)^{k+1} p(n - k(3k-1) / 2)} \]
+		\[ p(n) \sim 0.145 / n \cdot \exp(2.56 \sqrt{n}) \]
 
-% 		\begin{center}
-% 		\begin{tabular}{c|c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c}
-% 			$n$    & 0 & 1 & 2 & 3 & 4 & 5 & 6  & 7  & 8  & 9  & 20  & 50  & 100 \\ \hline
-% 			$p(n)$ & 1 & 1 & 2 & 3 & 5 & 7 & 11 & 15 & 22 & 30 & 627 & $\mathtt{\sim}$2e5 & $\mathtt{\sim}$2e8 \\
-% 		\end{tabular}
-% 		\end{center}
+		\begin{center}
+		\begin{tabular}{c|c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c@{\ }c}
+			$n$    & 0 & 1 & 2 & 3 & 4 & 5 & 6  & 7  & 8  & 9  & 20  & 50  & 100 \\ \hline
+			$p(n)$ & 1 & 1 & 2 & 3 & 5 & 7 & 11 & 15 & 22 & 30 & 627 & $\mathtt{\sim}$2e5 & $\mathtt{\sim}$2e8 \\
+		\end{tabular}
+		\end{center}
 
-% 	\subsection{Lucas' Theorem}
-% 		Let $n,m$ be non-negative integers and $p$ a prime. Write $n=n_kp^k+...+n_1p+n_0$ and $m=m_kp^k+...+m_1p+m_0$. Then $\binom{n}{m} \equiv \prod_{i=0}^k\binom{n_i}{m_i} \pmod{p}$.
+	% \subsection{Lucas' Theorem}
+	% 	Let $n,m$ be non-negative integers and $p$ a prime. Write $n=n_kp^k+...+n_1p+n_0$ and $m=m_kp^k+...+m_1p+m_0$. Then $\binom{n}{m} \equiv \prod_{i=0}^k\binom{n_i}{m_i} \pmod{p}$.
 
-% 	\subsection{Binomials}
-% 		\kactlimport{multinomial.h}
+	\subsection{Binomials}
+		\kactlimport{multinomial.h}
+
+	\subsection{Increasing / decreasing lists (Stars and bars)}
+		Number of non-decreasing (or non-increasing) sequences of length $n$ with elements from $\{1, \dots, k\}$ equals the number of non-negative integer solutions to
+		\[ x_1 + x_2 + \dots + x_k = n \implies \binom{n + k - 1}{k - 1} = \binom{n + k - 1}{n} \]
+		where $x_i$ represents the count of element $i$ in the list, and $n$ is the total size of the list.
+		(Direct combinations $\binom{k}{n}$ only count strictly increasing sequences with distinct elements, whereas stars \& bars allows duplicate values.)
+
+	\subsection{Count numbers divisible by divisors in $[1, R]$}
+		Number of integers in $[1, R]$ divisible by:
+		\begin{itemize}[noitemsep]
+			\item \textbf{all} divisors $d_0, d_1, \dots, d_m$:
+			\[ \left\lfloor \frac{R}{\text{lcm}(d_0, d_1, \dots, d_m)} \right\rfloor \]
+			\item \textbf{any} divisor $d_0, d_1, \dots, d_m$ (Inclusion-Exclusion Principle):
+			\[ \sum_{\emptyset \neq S \subseteq \{d_0, \dots, d_m\}} (-1)^{|S|-1} \left\lfloor \frac{R}{\text{lcm}(S)} \right\rfloor \]
+			For two divisors $d_0, d_1$: $\lfloor \frac{R}{d_0} \rfloor + \lfloor \frac{R}{d_1} \rfloor - \lfloor \frac{R}{\text{lcm}(d_0, d_1)} \rfloor$.
+		\end{itemize}
 
 \section{General purpose numbers}
-	% \subsection{Bernoulli numbers}
-	% 	EGF of Bernoulli numbers is $B(t)=\frac{t}{e^t-1}$ (FFT-able).
-	% 	$B[0,\ldots] = [1, -\frac{1}{2}, \frac{1}{6}, 0, -\frac{1}{30}, 0, \frac{1}{42}, \ldots]$
+	\subsection{Bernoulli numbers}
+		EGF of Bernoulli numbers is $B(t)=\frac{t}{e^t-1}$ (FFT-able).
+		$B[0,\ldots] = [1, -\frac{1}{2}, \frac{1}{6}, 0, -\frac{1}{30}, 0, \frac{1}{42}, \ldots]$
 
-	% 	Sums of powers:
-	% 	\small
-	% 	\[ \sum_{i=1}^n n^m = \frac{1}{m+1} \sum_{k=0}^m \binom{m+1}{k} B_k \cdot (n+1)^{m+1-k} \]
-	% 	\normalsize
+		Sums of powers:
+		\small
+		\[ \sum_{i=1}^n n^m = \frac{1}{m+1} \sum_{k=0}^m \binom{m+1}{k} B_k \cdot (n+1)^{m+1-k} \]
+		\normalsize
 
-	% 	Euler-Maclaurin formula for infinite sums:
-	% 	\small
-	% 	\[ \sum_{i=m}^{\infty} f(i) = \int_m^\infty f(x) dx - \sum_{k=1}^\infty \frac{B_k}{k!}f^{(k-1)}(m) \]
-	% 	\[ \approx \int_{m}^\infty f(x)dx + \frac{f(m)}{2} - \frac{f'(m)}{12} + \frac{f'''(m)}{720} + O(f^{(5)}(m)) \]
-	% 	\normalsize
+		Euler-Maclaurin formula for infinite sums:
+		\small
+		\[ \sum_{i=m}^{\infty} f(i) = \int_m^\infty f(x) dx - \sum_{k=1}^\infty \frac{B_k}{k!}f^{(k-1)}(m) \]
+		\[ \approx \int_{m}^\infty f(x)dx + \frac{f(m)}{2} - \frac{f'(m)}{12} + \frac{f'''(m)}{720} + O(f^{(5)}(m)) \]
+		\normalsize
 
 	% \subsection{Stirling numbers of the first kind}
 	% 	Number of permutations on $n$ items with $k$ cycles.
@@ -84,10 +99,10 @@
 	% 	$1, 1, 2, 5, 15, 52, 203, 877, 4140, 21147, \dots$. For $p$ prime,
 	% 	\[ B(p^m+n)\equiv mB(n)+B(n+1) \pmod{p} \]
 
-	% \subsection{Labeled unrooted trees}
-	% 	\# on $n$ vertices: $n^{n-2}$ \\
-	% 	\# on $k$ existing trees of size $n_i$: $n_1n_2\cdots n_k n^{k-2}$ \\
-	% 	\# with degrees $d_i$: $(n-2)! / ((d_1-1)! \cdots (d_n-1)!)$
+	\subsection{Labeled unrooted trees}
+		\# on $n$ vertices: $n^{n-2}$ \\
+		\# on $k$ existing trees of size $n_i$: $n_1n_2\cdots n_k n^{k-2}$ \\
+		\# with degrees $d_i$: $(n-2)! / ((d_1-1)! \cdots (d_n-1)!)$
 
 	\subsection{Catalan numbers}
 		\[ C_n=\frac{1}{n+1}\binom{2n}{n}= \binom{2n}{n}-\binom{2n}{n+1} = \frac{(2n)!}{(n+1)!n!} \]
