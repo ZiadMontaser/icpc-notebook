@@ -7,48 +7,66 @@
  * Status: stress-tested
  */
 #pragma once
+const int N = 4e5 + 7;
+const int MOD = 1e9+7;
+const int PRIME = 331;
 
-// Arithmetic mod 2^64-1. 2x slower than mod 2^64 and more
-// code, but works on evil test data (e.g. Thue-Morse, where
-// ABBA... and BAAB... of length 2^10 hash the same mod 2^64).
-// "typedef ull H;" instead if you think test data is random,
-// or work mod 10^9+7 if the Birthday paradox is not a problem.
-typedef uint64_t ull;
-struct H {
-	ull x; H(ull x=0) : x(x) {}
-	H operator+(H o) { return x + o.x + (x + o.x < x); }
-	H operator-(H o) { return *this + ~o.x; }
-	H operator*(H o) { auto m = (__uint128_t)x * o.x;
-		return H((ull)m) + (ull)(m >> 64); }
-	ull get() const { return x + !~x; }
-	bool operator==(H o) const { return get() == o.get(); }
-	bool operator<(H o) const { return get() < o.get(); }
-};
-static const H C = (ll)1e11+3; // (order ~ 3e9; random also ok)
+ll prime[N];
+ll hashes[N];
+void init(string s){
+    prime[0] = 1;
+    for (size_t i = 1; i < N; i++)
+    {
+        prime[i] = (prime[i-1] * PRIME) % MOD;
+    }
 
-struct HashInterval {
-	vector<H> ha, pw;
-	HashInterval(string& str) : ha(sz(str)+1), pw(ha) {
-		pw[0] = 1;
-		rep(i,0,sz(str))
-			ha[i+1] = ha[i] * C + str[i],
-			pw[i+1] = pw[i] * C;
-	}
-	H hashInterval(int a, int b) { // hash [a, b)
-		return ha[b] - ha[a] * pw[b - a];
-	}
-};
 
-vector<H> getHashes(string& str, int length) {
-	if (sz(str) < length) return {};
-	H h = 0, pw = 1;
-	rep(i,0,length)
-		h = h * C + str[i], pw = pw * C;
-	vector<H> ret = {h};
-	rep(i,length,sz(str)) {
-		ret.push_back(h = h * C + str[i] - pw * str[i-length]);
-	}
-	return ret;
+    for (size_t i = 0; i < s.size(); i++)
+    {
+        hashes[i+1] = (hashes[i] * PRIME + s[i] ) % MOD;
+    }
 }
 
-H hashString(string& s){H h{}; for(char c:s) h=h*C+c;return h;}
+ll getHash(int l, int r){
+    return (hashes[r + 1] - ((hashes[l] * prime[r - l + 1]) % MOD) + MOD) % MOD;
+}
+
+int compute_hash(string const& s) {
+    const int p1 = 31;
+    const int m = 1e9 + 9;
+    long long hash_value1 = 0;
+    long long p_pow1 = 1;
+    for (char c : s) {
+        hash_value1 = (hash_value1 + (c - 'A' + 1) * p_pow1) % m;
+        p_pow1 = (p_pow1 * p1) % m;
+    }
+    return hash_value1;
+}
+
+int combine_hashed_strings(string const& prevStr, int prevHash,int newHash){
+    return add(prevHash,  mul(newHash,  power(31, prevStr.size())));
+}
+
+for (char c : s) {
+	h1 = (h1 * p1 + (c - 'a' + 1)) % m1;
+	h2 = (h2 * p2 + (c - 'a' + 1)) % m2;
+
+	ll ch = (ll(h1) << 32) | h2;
+
+	m[ch]++;
+}
+
+struct custom_hash {
+  static uint64_t splitmix64(uint64_t x) {
+    x += 0x9e3779b97f4a7c15;
+    x = (x ^ (x >> 30)) * 0xbf58476d1ce4e5b9;
+    x = (x ^ (x >> 27)) * 0x94d049bb133111eb;
+    return x ^ (x >> 31);
+  }
+  size_t operator()(uint64_t x) const {
+    static const uint64_t FIXED_RANDOM = chrono::steady_clock::now().time_since_epoch().count();
+    return splitmix64(x + FIXED_RANDOM);
+  }
+};
+
+gp_hash_table<int, int, custom_hash> mp;
