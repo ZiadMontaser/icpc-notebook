@@ -1,11 +1,11 @@
 /**
  * Author: Unknown
  * Date: Unknown
- * Description: Provides prime factorization for any integer $x \le N$. Need Sieve to root N.
+ * Description: Provides prime factorization for any integer $k \le N$. Need Sieve to root N.
  * Usage:
  *  sieve(N);
- *  auto res = factorize(number);
- * Time: $O(\sqrt{x})$
+ *  auto res = prime_factorization(number);
+ * Time: $O(\sqrt{k})$
  */
 #pragma once
 
