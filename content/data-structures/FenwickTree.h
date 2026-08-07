@@ -1,34 +1,52 @@
 /**
- * Author: Lukas Polacek
+ * Author: Yousef
  * Date: 2009-10-30
  * License: CC0
  * Source: folklore/TopCoder
  * Description: Computes partial sums a[0] + a[1] + ... + a[pos - 1], and updates single elements a[i],
- * taking the difference between the old and new value.
+ * taking the difference between the old and new value, and is 1-indexed.
  * Time: Both operations are $O(\log N)$.
  * Status: Stress-tested
  */
 #pragma once
 
-struct FT {
-	vector<ll> s;
-	FT(int n) : s(n) {}
-	void update(int pos, ll dif) { // a[pos] += dif
-		for (; pos < sz(s); pos |= pos + 1) s[pos] += dif;
-	}
-	ll query(int pos) { // sum of values in [0, pos)
-		ll res = 0;
-		for (; pos > 0; pos &= pos - 1) res += s[pos-1];
-		return res;
-	}
-	int lower_bound(ll sum) {// min pos st sum of [0, pos] >= sum
-		// Returns n if no sum is >= sum, or -1 if empty sum is.
-		if (sum <= 0) return -1;
-		int pos = 0;
-		for (int pw = 1 << 25; pw; pw >>= 1) {
-			if (pos + pw <= sz(s) && s[pos + pw-1] < sum)
-				pos += pw, sum -= s[pos-1];
-		}
-		return pos;
-	}
+// 1-indexed
+struct BIT {
+
+    int n;
+    vector<long long> b;
+
+    BIT(int _n) {
+        n = _n;
+        b.assign(n + 1, 0);
+    }
+
+    long long get(int idx) {
+        long long res = 0;
+        while (idx > 0) {
+            res += b[idx];
+            idx -= idx & -idx;
+        }
+        return res;
+    }
+
+    void add(int idx, int v) {
+        while (idx <= n) {
+            b[idx] += v;
+            idx += idx & -idx;
+        }
+    }
+
+    long long get(int l, int r) {
+        return get(r) - get(l - 1);
+    }
+
+    long long get_idx(int idx) {
+        return get(idx) - get(idx - 1);
+    }
+
+    void set(int idx, int v) {
+        int old = get_idx(idx);
+        add(idx, -old + v);
+    }
 };
