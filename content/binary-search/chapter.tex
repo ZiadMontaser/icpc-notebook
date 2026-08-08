@@ -1,0 +1,75 @@
+\chapter{Binary Search}
+
+\section{Binary Search Variants}
+\begingroup
+\scriptsize
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{2pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X 
+                              >{\raggedright\arraybackslash}X 
+                              >{\raggedright\arraybackslash}X 
+                              >{\raggedright\arraybackslash}X 
+                              >{\raggedright\arraybackslash}p{0.25\linewidth} 
+                              >{\raggedright\arraybackslash}X 
+                              >{\raggedright\arraybackslash}X}
+\hline
+\textbf{Name} & \textbf{Loop} & \textbf{Start} & \textbf{Mid} & \textbf{Update} & \textbf{Final} & \textbf{Use Case} \\
+\hline
+
+Classic & 
+\texttt{while(l<=r)} & 
+\texttt{l=0, r=n-1} & 
+\texttt{l+(r-l)/2} & 
+\texttt{a[mid]==t} $\to$ return \newline
+\texttt{a[mid]<t} $\to$ \texttt{l=mid+1} \newline
+\texttt{a[mid]>t} $\to$ \texttt{r=mid-1} & 
+\texttt{l>r} & 
+Find exact value \\
+
+\hline
+
+Half-Open & 
+\texttt{while(l<r)} & 
+\texttt{l=0, r=n} & 
+\texttt{l+(r-l)/2} & 
+\texttt{a[mid]<t} $\to$ \texttt{l=mid+1} \newline
+Else $\to$ \texttt{r=mid} & 
+\texttt{l==r} & 
+First val $\ge$ target \\
+
+\hline
+
+Lower Bound & 
+\texttt{while(l<r)} & 
+\texttt{l=0, r=n} & 
+\texttt{l+(r-l)/2} & 
+\texttt{f(mid)} $\to$ \texttt{r=mid} \newline
+Else $\to$ \texttt{l=mid+1} & 
+\texttt{l==r} & 
+Smallest idx where cond true \\
+
+\hline
+
+Upper Bound & 
+\texttt{while(l<r)} & 
+\texttt{l=0, r=n} & 
+\texttt{l+(r-l+1)/2} & 
+\texttt{f(mid)} $\to$ \texttt{l=mid} \newline
+Else $\to$ \texttt{r=mid-1} & 
+\texttt{l==r} & 
+Largest idx where cond true \\
+
+\hline
+
+Tight Bounds & 
+\texttt{while(r-l>1)} & 
+\texttt{l=F, r=T} & 
+\texttt{(l+r)/2} & 
+\texttt{f(mid)} $\to$ \texttt{r=mid} \newline
+Else $\to$ \texttt{l=mid} & 
+\texttt{r==l+1} & 
+Thresholding (min $x$ where $f(x)$) \\
+
+\hline
+\end{tabularx}
+\endgroup
